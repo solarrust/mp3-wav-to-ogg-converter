@@ -3,11 +3,11 @@ import Link from "@mui/material/Link";
 
 const DownloadLink = forwardRef(function (props, ref) {
   return (
-    <Link component="button" variant="body2" ref={ref}>
+    <Link href="#" ref={ref} className="converter__download-link">
       Скачать файл
     </Link>
   );
 });
 
-DownloadLink.displayName = 'DownloadLink';
+DownloadLink.displayName = "DownloadLink";
 export default DownloadLink;
