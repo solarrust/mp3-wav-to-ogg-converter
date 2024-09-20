@@ -9,4 +9,5 @@ const DownloadLink = forwardRef(function (props, ref) {
   );
 });
 
+DownloadLink.displayName = 'DownloadLink';
 export default DownloadLink;
