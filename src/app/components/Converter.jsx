@@ -1,12 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import JSZip from "jszip";
-import { saveAs } from "file-saver";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile } from "@ffmpeg/util";
 import FileInput from "./FileInput";
 import ConvertButton from "./ConvertButton";
 import Progress from "./Progress";
 import DownloadLink from "./DownloadLink";
+import { Typography } from "@mui/material";
 
 export default function Converter() {
   const [uploadFiles, setUploadFiles] = useState([]);
@@ -99,6 +98,8 @@ export default function Converter() {
       {ConvertProcess}
     </div>
   ) : (
-    <p className="converter__preview">Launching the system 🚀</p>
+    <Typography className="converter__preview" variant="subtitle1">
+      Launching the system 🚀
+    </Typography>
   );
 }
