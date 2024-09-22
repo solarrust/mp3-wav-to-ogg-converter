@@ -9,7 +9,7 @@ function DownloadLink(props) {
         download={props.download}
         className="converter__download-link"
       >
-        Скачать {props.text}
+        Download {props.text}
       </Link>
     </>
   );

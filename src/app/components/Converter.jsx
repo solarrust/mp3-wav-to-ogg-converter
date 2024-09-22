@@ -7,7 +7,6 @@ import FileInput from "./FileInput";
 import ConvertButton from "./ConvertButton";
 import Progress from "./Progress";
 import DownloadLink from "./DownloadLink";
-import Button from "@mui/material/Button";
 
 export default function Converter() {
   const [uploadFiles, setUploadFiles] = useState([]);
@@ -15,8 +14,6 @@ export default function Converter() {
   const [loaded, setLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const ffmpegRef = useRef(new FFmpeg());
-  // const audioRef = useRef(null);
-  // const downloadLink = useRef(null);
   const [convertProgress, setConvertProgress] = useState(0);
 
   function handleInputChange(event) {
@@ -69,7 +66,7 @@ export default function Converter() {
       ? uploadFiles.map((file, index) => (
           <li key={file.name + index}>{file.name}</li>
         ))
-      : "Файлы не выбраны";
+      : "No files";
 
   const DownloadLinksList =
     convertedFiles.length > 0
@@ -102,6 +99,6 @@ export default function Converter() {
       {ConvertProcess}
     </div>
   ) : (
-    <p className="converter__preview">Система запускается 🚀</p>
+    <p className="converter__preview">Launching the system 🚀</p>
   );
 }

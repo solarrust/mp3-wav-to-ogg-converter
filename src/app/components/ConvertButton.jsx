@@ -8,7 +8,7 @@ export default function ConvertButton({ onClick }) {
       onClick={onClick}
       variant="contained"
     >
-      Конвертировать в OGG
+      Convert into OGG
     </Button>
   );
 }

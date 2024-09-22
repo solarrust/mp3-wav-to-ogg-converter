@@ -24,7 +24,7 @@ export default function FileInput({ onChange }) {
         tabIndex={-1}
         startIcon={<CloudUploadIcon />}
       >
-        Выбери файлы
+        Choose files
         <VisuallyHiddenInput
           type="file"
           onChange={onChange}
