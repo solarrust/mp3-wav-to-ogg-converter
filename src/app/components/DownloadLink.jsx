@@ -1,13 +1,18 @@
 import React, { forwardRef } from "react";
 import Link from "@mui/material/Link";
 
-const DownloadLink = forwardRef(function (props, ref) {
+function DownloadLink(props) {
   return (
-    <Link href="#" ref={ref} className="converter__download-link">
-      Скачать файл
-    </Link>
+    <>
+      <Link
+        href={props.href}
+        download={props.download}
+        className="converter__download-link"
+      >
+        Скачать {props.text}
+      </Link>
+    </>
   );
-});
+}
 
-DownloadLink.displayName = "DownloadLink";
 export default DownloadLink;

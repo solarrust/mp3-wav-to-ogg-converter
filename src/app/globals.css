@@ -57,4 +57,37 @@ a {
 .converter {
   display: grid;
   gap: 2em;
+  inline-size: clamp(300px, 80%, 550px);
+}
+
+ul {
+  display: grid;
+  gap: 0.8em;
+}
+
+.converter__files-list {
+  font-weight: 800;
+  list-style: none;
+
+  & li::before {
+    content: "👉 ";
+  }
+}
+
+.converter__links-list {
+  list-style: none;
+
+  & li::before {
+    content: "👍 ";
+  }
+}
+
+.converter__links-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+
+  & > audio {
+    margin-inline-start: auto;
+  }
 }
