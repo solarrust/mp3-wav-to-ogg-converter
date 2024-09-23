@@ -18,9 +18,6 @@ export default function FileInput({ onChange }) {
   });
   return (
     <div className="converter__wrapper">
-      <Typography variant="caption">
-        Only <strong>MP3</strong> and <strong>WAV</strong> files are allowed
-      </Typography>
       <Button
         component="label"
         role={undefined}
@@ -36,6 +33,10 @@ export default function FileInput({ onChange }) {
           accept="audio/mp3, audio/wav"
         />
       </Button>
+
+      <Typography variant="caption">
+        Only <strong>MP3</strong> and <strong>WAV</strong> files are allowed
+      </Typography>
     </div>
   );
 }

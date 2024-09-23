@@ -13,14 +13,18 @@ export default function Converter() {
   const [convertedFiles, setConvertedFiles] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const ffmpegRef = useRef(new FFmpeg());
   const [convertProgress, setConvertProgress] = useState(0);
+  const ffmpegRef = useRef(new FFmpeg());
 
   function handleInputChange(event) {
+    reset();
+    setUploadFiles(Array.from(event.target.files));
+  }
+
+  function reset() {
     setUploadFiles([]);
     setConvertedFiles([]);
     setConvertProgress(0);
-    setUploadFiles(Array.from(event.target.files));
   }
 
   const load = async () => {
@@ -90,8 +94,10 @@ export default function Converter() {
     uploadFiles.length > 0 ? (
       <>
         <ul className="converter__files-list">{FilesListItems}</ul>
-        <ConvertButton onClick={convertFiles} />{" "}
-        <Progress value={convertProgress} />
+        <div className="converter__wrapper">
+          <ConvertButton onClick={convertFiles} />{" "}
+          <Progress value={convertProgress} />
+        </div>
       </>
     ) : (
       ""
