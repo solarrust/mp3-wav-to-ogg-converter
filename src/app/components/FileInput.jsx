@@ -1,7 +1,8 @@
+import React from "react";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import React from "react";
+import Typography from "@mui/material/Typography";
 
 export default function FileInput({ onChange }) {
   const VisuallyHiddenInput = styled("input")({
@@ -16,7 +17,10 @@ export default function FileInput({ onChange }) {
     width: 1,
   });
   return (
-    <>
+    <div className="converter__wrapper">
+      <Typography variant="caption">
+        Only <strong>MP3</strong> and <strong>WAV</strong> files are allowed
+      </Typography>
       <Button
         component="label"
         role={undefined}
@@ -29,9 +33,9 @@ export default function FileInput({ onChange }) {
           type="file"
           onChange={onChange}
           multiple
-          accept="audio/*"
+          accept="audio/mp3, audio/wav"
         />
       </Button>
-    </>
+    </div>
   );
 }

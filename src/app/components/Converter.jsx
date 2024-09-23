@@ -6,6 +6,7 @@ import ConvertButton from "./ConvertButton";
 import Progress from "./Progress";
 import DownloadLink from "./DownloadLink";
 import { Typography } from "@mui/material";
+import ZipDownloadLink from "./ZipDownloadLink";
 
 export default function Converter() {
   const [uploadFiles, setUploadFiles] = useState([]);
@@ -16,6 +17,9 @@ export default function Converter() {
   const [convertProgress, setConvertProgress] = useState(0);
 
   function handleInputChange(event) {
+    setUploadFiles([]);
+    setConvertedFiles([]);
+    setConvertProgress(0);
     setUploadFiles(Array.from(event.target.files));
   }
 
@@ -31,24 +35,24 @@ export default function Converter() {
     load();
   }, []);
 
-  const transcode = async (file) => {
+  const transcode = async (file, index) => {
     const ffmpeg = ffmpegRef.current;
     ffmpeg.on("progress", ({ progress, time }) => {
-      setConvertProgress(progress * 100);
+      setConvertProgress(progress);
     });
     const fileName = file.name.slice(0, file.name.lastIndexOf("."));
-    let inputFileName = "input.mp3";
+    let inputFileName = `${fileName}.mp3"`;
 
     if (file.type === "audio/wav") {
-      inputFileName = "input.wav";
+      inputFileName = `${fileName}.wav"`;
     }
 
     await ffmpeg.writeFile(inputFileName, await fetchFile(file));
-    await ffmpeg.exec(["-i", inputFileName, "output.ogg"]);
-    const data = await ffmpeg.readFile("output.ogg");
+    await ffmpeg.exec(["-i", inputFileName, `${fileName}.ogg`]);
+    const data = await ffmpeg.readFile(`${fileName}.ogg`);
 
     const link = {
-      href: URL.createObjectURL(new Blob([data.buffer], { type: "audio/ogg" })),
+      blob: new Blob([data.buffer], { type: "audio/ogg" }),
       text: `${fileName}.ogg`,
       download: `${fileName}.ogg`,
     };
@@ -57,7 +61,7 @@ export default function Converter() {
   };
 
   const convertFiles = () => {
-    return uploadFiles.map((file) => transcode(file));
+    uploadFiles.map((file, index) => transcode(file, index));
   };
 
   const FilesListItems =
@@ -72,7 +76,9 @@ export default function Converter() {
       ? convertedFiles.map((file, index) => (
           <li key={index + file.text} className="converter__links-item">
             <DownloadLink
-              href={file.href}
+              href={URL.createObjectURL(
+                new Blob([file.blob], { type: "audio/ogg" }),
+              )}
               text={file.text}
               download={file.download}
             />
@@ -86,7 +92,16 @@ export default function Converter() {
         <ul className="converter__files-list">{FilesListItems}</ul>
         <ConvertButton onClick={convertFiles} />{" "}
         <Progress value={convertProgress} />
+      </>
+    ) : (
+      ""
+    );
+
+  const convertResult =
+    convertedFiles.length === uploadFiles.length ? (
+      <>
         <ul className="converter__links-list">{DownloadLinksList}</ul>
+        <ZipDownloadLink files={convertedFiles} />
       </>
     ) : (
       ""
@@ -96,6 +111,7 @@ export default function Converter() {
     <div className="converter">
       <FileInput onChange={handleInputChange} />
       {ConvertProcess}
+      {convertResult}
     </div>
   ) : (
     <Typography className="converter__preview" variant="subtitle1">

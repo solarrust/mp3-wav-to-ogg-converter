@@ -73,6 +73,12 @@ ul {
   gap: 0.8em;
 }
 
+.converter__wrapper {
+  display: grid;
+  gap: 0.5em;
+  text-align: center;
+}
+
 .converter__files-list {
   font-weight: 800;
   list-style: none;
