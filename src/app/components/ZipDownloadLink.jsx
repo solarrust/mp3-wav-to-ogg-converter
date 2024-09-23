@@ -1,5 +1,6 @@
 import React from "react";
-import Link from "@mui/material/Link";
+import Button from "@mui/material/Button";
+
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 
@@ -16,9 +17,9 @@ export default function ZipDownloadLink({ files }) {
   }
 
   return files.length > 0 ? (
-    <Link target="_blank" onClick={onClick}>
+    <Button variant="contained" onClick={onClick}>
       Download ZIP
-    </Link>
+    </Button>
   ) : (
     ""
   );
