@@ -1,17 +1,11 @@
-import React, { forwardRef } from "react";
+import React from "react";
 import Link from "@mui/material/Link";
 
-function DownloadLink(props) {
+function DownloadLink({ href, download, text }) {
   return (
-    <>
-      <Link
-        href={props.href}
-        download={props.download}
-        className="converter__download-link"
-      >
-        Download {props.text}
-      </Link>
-    </>
+    <Link href={href} download={download} className="converter__download-link">
+      Download {text}
+    </Link>
   );
 }
 
