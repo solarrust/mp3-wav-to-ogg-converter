@@ -6,5 +6,6 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     reporters: ['default', 'html'],
+    setupFiles: ['./setupTests.js']
   },
 });
