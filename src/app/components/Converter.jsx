@@ -28,18 +28,23 @@ export default function Converter() {
   }
 
   const load = async () => {
+    const start = performance.now();
     setIsLoading(true);
     const ffmpeg = ffmpegRef.current;
     await ffmpeg.load();
     setLoaded(true);
     setIsLoading(false);
+    const timeConsumed = performance.now() - start;
+    console.log(`Time for loading ffmpeg.wasm: ${timeConsumed}`);
   };
 
   useEffect(() => {
     load();
   }, []);
 
-  const transcode = async (file, index) => {
+  const transcode = async (file) => {
+    const start = performance.now();
+
     const ffmpeg = ffmpegRef.current;
     ffmpeg.on("progress", ({ progress, time }) => {
       setConvertProgress(progress);
@@ -62,10 +67,13 @@ export default function Converter() {
     };
 
     setConvertedFiles((prev) => [...prev, link]);
+
+    const timeConsumed = performance.now() - start;
+    console.info(`Time for converting ${inputFileName} file: ${timeConsumed}`);
   };
 
   const convertFiles = () => {
-    uploadFiles.map((file, index) => transcode(file, index));
+    uploadFiles.map((file, index) => transcode(file));
   };
 
   const FilesListItems =
@@ -98,6 +106,7 @@ export default function Converter() {
           <ConvertButton onClick={convertFiles} />{" "}
           <Progress value={convertProgress} />
         </div>
+        <ul className="converter__links-list">{DownloadLinksList}</ul>
       </>
     ) : (
       ""
@@ -105,10 +114,7 @@ export default function Converter() {
 
   const convertResult =
     convertedFiles.length === uploadFiles.length ? (
-      <>
-        <ul className="converter__links-list">{DownloadLinksList}</ul>
-        <ZipDownloadLink files={convertedFiles} />
-      </>
+      <ZipDownloadLink files={convertedFiles} />
     ) : (
       ""
     );

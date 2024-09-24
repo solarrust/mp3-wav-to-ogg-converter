@@ -13,7 +13,6 @@ export default function ZipDownloadLink({ files }) {
     zip
       .generateAsync({ type: "blob" })
       .then((blob) => saveAs(blob, "converted-files.zip"));
-    console.log({ zip });
   }
 
   return files.length > 0 ? (
