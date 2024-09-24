@@ -50,7 +50,7 @@ export default function Converter() {
       setConvertProgress(progress);
     });
     const fileName = file.name.slice(0, file.name.lastIndexOf("."));
-    let inputFileName = `${fileName}.mp3"`;
+    let inputFileName = `${fileName}.mp3`;
 
     if (file.type === "audio/wav") {
       inputFileName = `${fileName}.wav`;
