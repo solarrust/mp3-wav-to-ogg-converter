@@ -112,3 +112,7 @@ ul {
     margin-inline-start: auto;
   }
 }
+
+.converter__error {
+  color: tomato;
+}
