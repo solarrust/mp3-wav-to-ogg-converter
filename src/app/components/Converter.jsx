@@ -53,26 +53,28 @@ export default function Converter() {
     let inputFileName = `${fileName}.mp3"`;
 
     if (file.type === "audio/wav") {
-      inputFileName = `${fileName}.wav"`;
+      inputFileName = `${fileName}.wav`;
     }
 
+    const outputFileName = `${fileName}.ogg`;
+
     await ffmpeg.writeFile(inputFileName, await fetchFile(file));
-    await ffmpeg.exec(["-i", inputFileName, `${fileName}.ogg`]);
-    const data = await ffmpeg.readFile(`${fileName}.ogg`);
+    await ffmpeg.exec(["-i", inputFileName, outputFileName]);
+    const data = await ffmpeg.readFile(outputFileName);
 
     const link = {
       blob: new Blob([data.buffer], { type: "audio/ogg" }),
-      text: `${fileName}.ogg`,
-      download: `${fileName}.ogg`,
+      text: outputFileName,
+      download: outputFileName,
     };
 
     setConvertedFiles((prev) => [...prev, link]);
 
     const timeConsumed = performance.now() - start;
-    console.info(`Time for converting ${inputFileName} file: ${timeConsumed}`);
+    console.log(`Time for converting ${fileName} file: ${timeConsumed}`);
   };
 
-  const convertFiles = () => {
+  const convertingFiles = () => {
     uploadFiles.map((file, index) => transcode(file));
   };
 
@@ -103,7 +105,7 @@ export default function Converter() {
       <>
         <ul className="converter__files-list">{FilesListItems}</ul>
         <div className="converter__wrapper">
-          <ConvertButton onClick={convertFiles} />{" "}
+          <ConvertButton onClick={convertingFiles} />
           <Progress value={convertProgress} />
         </div>
         <ul className="converter__links-list">{DownloadLinksList}</ul>
