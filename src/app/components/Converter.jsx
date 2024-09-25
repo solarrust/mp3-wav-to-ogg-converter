@@ -29,7 +29,11 @@ export default function Converter() {
   }
 
   const loadFfmpeg = async () => {
-    await loadWasm(ffmpegRef.current);
+    const ffmpeg = ffmpegRef.current;
+    await loadWasm(ffmpeg);
+    ffmpeg.on("progress", ({ progress, time }) => {
+      setConvertProgress(progress);
+    });
     setLoaded(true);
   };
 
@@ -39,9 +43,6 @@ export default function Converter() {
 
   const converting = async (file) => {
     const ffmpeg = ffmpegRef.current;
-    ffmpeg.on("progress", ({ progress, time }) => {
-      setConvertProgress(progress);
-    });
 
     const link = await transcode(ffmpeg, file);
 
