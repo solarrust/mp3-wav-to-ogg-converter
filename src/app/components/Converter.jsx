@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile } from "@ffmpeg/util";
+import loadWasm from "../lib/loadWasm";
 import FileInput from "./FileInput";
 import ConvertButton from "./ConvertButton";
 import Progress from "./Progress";
@@ -14,34 +15,28 @@ export default function Converter() {
   const [uploadFiles, setUploadFiles] = useState([]);
   const [convertedFiles, setConvertedFiles] = useState([]);
   const [loaded, setLoaded] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
   const [convertProgress, setConvertProgress] = useState(0);
   const ffmpegRef = useRef(new FFmpeg());
 
   function handleInputChange(event) {
-    reset();
+    resetStates();
     setUploadFiles(Array.from(event.target.files));
   }
 
-  function reset() {
+  function resetStates() {
     setUploadFiles([]);
     setConvertedFiles([]);
     setConvertProgress(0);
   }
 
-  const load = async () => {
-    const start = performance.now();
-    setIsLoading(true);
-    const ffmpeg = ffmpegRef.current;
-    await ffmpeg.load();
+  const loadFfmpeg = async () => {
+    await loadWasm(ffmpegRef.current);
     setLoaded(true);
-    setIsLoading(false);
-    const timeConsumed = performance.now() - start;
-    console.log(`Time for loading ffmpeg.wasm: ${timeConsumed}`);
   };
 
   useEffect(() => {
-    load();
+    loadFfmpeg();
   }, []);
 
   const transcode = async (file) => {
@@ -90,7 +85,7 @@ export default function Converter() {
             <ConvertButton onClick={convertingFiles} />
             <Progress value={convertProgress} />
           </div>
-          <DownloadLinksList files={convertedFiles}/>
+          <DownloadLinksList files={convertedFiles} />
         </>
       )}
       {convertedFiles.length === uploadFiles.length && (
@@ -102,4 +97,7 @@ export default function Converter() {
       Launching the system 🚀
     </Typography>
   );
+}
+function loadFfmpeg(current) {
+  throw new Error("Function not implemented.");
 }
