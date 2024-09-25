@@ -15,7 +15,7 @@ export default function Converter() {
   const [convertedFiles, setConvertedFiles] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [convertProgress, setConvertProgress] = useState(0);
-  const ffmpegRef = useRef(new FFmpeg());
+  const ffmpegRef = useRef(null);
 
   function handleInputChange(event) {
     resetStates();
@@ -29,9 +29,8 @@ export default function Converter() {
   }
 
   const loadFfmpeg = async () => {
-    const ffmpeg = ffmpegRef.current;
-    await loadWasm(ffmpeg);
-    ffmpeg.on("progress", ({ progress, time }) => {
+    ffmpegRef.current = await loadWasm();
+    ffmpegRef.current.on("progress", ({ progress, time }) => {
       setConvertProgress(progress);
     });
     setLoaded(true);
