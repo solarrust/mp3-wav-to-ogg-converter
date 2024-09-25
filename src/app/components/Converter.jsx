@@ -1,21 +1,16 @@
-import React, { useState, useRef, useEffect } from "react";
-import { FFmpeg } from "@ffmpeg/ffmpeg";
-import loadWasm from "../lib/loadWasm";
+import React, { useState, useEffect } from "react";
 import transcode from "../lib/transcode";
 import FileInput from "./FileInput";
 import ConvertButton from "./ConvertButton";
 import Progress from "./Progress";
 import ZipDownloadButton from "./ZipDownloadButton";
-import { Typography } from "@mui/material";
 import UploadFilesList from "./UploadFilesList";
 import DownloadLinksList from "./DownloadLinksList";
 
-export default function Converter() {
+export default function Converter({ ffmpeg }) {
   const [uploadFiles, setUploadFiles] = useState([]);
   const [convertedFiles, setConvertedFiles] = useState([]);
-  const [loaded, setLoaded] = useState(false);
   const [convertProgress, setConvertProgress] = useState(0);
-  const ffmpegRef = useRef(null);
 
   function handleInputChange(event) {
     resetStates();
@@ -28,21 +23,13 @@ export default function Converter() {
     setConvertProgress(0);
   }
 
-  const loadFfmpeg = async () => {
-    ffmpegRef.current = await loadWasm();
-    ffmpegRef.current.on("progress", ({ progress, time }) => {
+  useEffect(() => {
+    ffmpeg.on("progress", ({ progress, time }) => {
       setConvertProgress(progress);
     });
-    setLoaded(true);
-  };
-
-  useEffect(() => {
-    loadFfmpeg();
   }, []);
 
   const converting = async (file) => {
-    const ffmpeg = ffmpegRef.current;
-
     const link = await transcode(ffmpeg, file);
 
     setConvertedFiles((prev) => [...prev, link]);
@@ -52,7 +39,7 @@ export default function Converter() {
     uploadFiles.map((file) => converting(file));
   };
 
-  return loaded ? (
+  return (
     <div className="converter">
       <FileInput onChange={handleInputChange} />
       {uploadFiles.length > 0 && (
@@ -69,9 +56,5 @@ export default function Converter() {
         <ZipDownloadButton files={convertedFiles} />
       )}
     </div>
-  ) : (
-    <Typography className="converter__preview" variant="subtitle1">
-      Launching the system 🚀
-    </Typography>
   );
 }

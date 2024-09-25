@@ -8,7 +8,6 @@ import {
 } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import Converter from "../components/Converter";
-import { FFmpeg } from "@ffmpeg/ffmpeg";
 
 beforeEach(() => {
   global.URL.createObjectURL = vi.fn();
@@ -18,56 +17,34 @@ afterEach(() => {
   cleanup();
 });
 
-vi.mock("@ffmpeg/ffmpeg", () => {
-  const mockFFmpeg = {
-    load: vi.fn().mockResolvedValue(),
-    writeFile: vi.fn().mockResolvedValue(),
-    exec: vi.fn().mockResolvedValue(),
-    readFile: vi.fn().mockResolvedValue(new Uint8Array()),
-    on: vi.fn(),
-  };
-
-  return {
-    FFmpeg: vi.fn().mockImplementation(() => mockFFmpeg),
-  };
-});
-
 describe("Converter Component", () => {
+  let mockFFmpeg;
   let file;
+  const label = "Choose files";
 
   beforeEach(() => {
     file = new File(["dummy content"], "test.mp3", {
       type: "audio/mpeg",
     });
-  });
 
-  it("renders 'Launching the system' message before ffmpeg is loaded", () => {
-    render(<Converter />);
-    expect(screen.getByText("Launching the system 🚀")).toBeInTheDocument();
+    mockFFmpeg = {
+      writeFile: vi.fn().mockResolvedValue(),
+      exec: vi.fn().mockResolvedValue(),
+      readFile: vi.fn().mockResolvedValue(new Uint8Array()),
+      on: vi.fn(),
+    };
   });
 
   it("renders file input after ffmpeg is loaded", async () => {
-    render(<Converter />);
+    render(<Converter ffmpeg={mockFFmpeg} />);
 
-    await waitFor(() =>
-      expect(
-        screen.queryByText("Launching the system 🚀"),
-      ).not.toBeInTheDocument(),
-    );
-
-    expect(document.querySelector('input[type="file"]')).toBeInTheDocument();
+    expect(screen.getByLabelText(label)).toBeInTheDocument();
   });
 
   it("handles file input and displays uploaded files", async () => {
-    render(<Converter />);
+    render(<Converter ffmpeg={mockFFmpeg} />);
 
-    await waitFor(() => {
-      expect(
-        screen.queryByText("Launching the system 🚀"),
-      ).not.toBeInTheDocument();
-    });
-
-    const fileInput = document.querySelector('input[type="file"]');
+    const fileInput = screen.getByLabelText(label);
 
     fireEvent.change(fileInput, { target: { files: [file] } });
 
@@ -75,23 +52,15 @@ describe("Converter Component", () => {
   });
 
   it("starts conversion when the Convert button is clicked", async () => {
-    render(<Converter />);
+    render(<Converter ffmpeg={mockFFmpeg} />);
 
-    await waitFor(() => {
-      expect(
-        screen.queryByText("Launching the system 🚀"),
-      ).not.toBeInTheDocument();
-    });
-
-    const fileInput = document.querySelector('input[type="file"]');
+    const fileInput = screen.getByLabelText(label);
     fireEvent.change(fileInput, { target: { files: [file] } });
 
     const convertButton = screen.getByText("Convert into OGG");
     fireEvent.click(convertButton);
 
     await waitFor(() => {
-      const mockFFmpeg = FFmpeg.mock.results[0].value;
-      expect(mockFFmpeg.load).toHaveBeenCalled();
       expect(mockFFmpeg.writeFile).toHaveBeenCalledWith(
         "test.mp3",
         expect.anything(),
@@ -106,15 +75,9 @@ describe("Converter Component", () => {
   });
 
   it("shows download links after conversion", async () => {
-    render(<Converter />);
+    render(<Converter ffmpeg={mockFFmpeg} />);
 
-    await waitFor(() => {
-      expect(
-        screen.queryByText("Launching the system 🚀"),
-      ).not.toBeInTheDocument();
-    });
-
-    const fileInput = document.querySelector('input[type="file"]');
+    const fileInput = screen.getByLabelText(label);
     fireEvent.change(fileInput, { target: { files: [file] } });
 
     const convertButton = screen.getByText("Convert into OGG");
@@ -126,15 +89,9 @@ describe("Converter Component", () => {
   });
 
   it("renders ZipDownloadLink when all files are converted", async () => {
-    render(<Converter />);
+    render(<Converter ffmpeg={mockFFmpeg} />);
 
-    await waitFor(() => {
-      expect(
-        screen.queryByText("Launching the system 🚀"),
-      ).not.toBeInTheDocument();
-    });
-
-    const fileInput = document.querySelector('input[type="file"]');
+    const fileInput = screen.getByLabelText(label);
     fireEvent.change(fileInput, { target: { files: [file] } });
 
     const convertButton = screen.getByText("Convert into OGG");
