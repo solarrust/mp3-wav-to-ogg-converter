@@ -25,12 +25,6 @@ export default function FileInput({ onChange }) {
     }
   };
 
-  const showError = !valid ? (
-    <span className="converter__error">Invalid file type</span>
-  ) : (
-    ""
-  );
-
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
     clipPath: "inset(50%)",
@@ -63,7 +57,7 @@ export default function FileInput({ onChange }) {
       <Typography variant="caption">
         Only <strong>MP3</strong> and <strong>WAV</strong> files are allowed
       </Typography>
-      {showError}
+      {!valid && <span className="converter__error">Invalid file type</span>}
     </div>
   );
 }
