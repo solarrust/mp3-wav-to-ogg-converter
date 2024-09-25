@@ -5,7 +5,7 @@ import transcode from "../lib/transcode";
 import FileInput from "./FileInput";
 import ConvertButton from "./ConvertButton";
 import Progress from "./Progress";
-import ZipDownloadLink from "./ZipDownloadLink";
+import ZipDownloadButton from "./ZipDownloadButton";
 import { Typography } from "@mui/material";
 import UploadFilesList from "./UploadFilesList";
 import DownloadLinksList from "./DownloadLinksList";
@@ -66,7 +66,7 @@ export default function Converter() {
         </>
       )}
       {convertedFiles.length === uploadFiles.length && (
-        <ZipDownloadLink files={convertedFiles} />
+        <ZipDownloadButton files={convertedFiles} />
       )}
     </div>
   ) : (
