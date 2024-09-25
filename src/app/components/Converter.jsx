@@ -78,54 +78,40 @@ export default function Converter() {
     uploadFiles.map((file, index) => transcode(file));
   };
 
-  const FilesListItems =
-    uploadFiles.length > 0
-      ? uploadFiles.map((file, index) => (
-          <li key={file.name + index}>{file.name}</li>
-        ))
-      : "No files";
-
-  const DownloadLinksList =
-    convertedFiles.length > 0
-      ? convertedFiles.map((file, index) => (
-          <li key={index + file.text} className="converter__links-item">
-            <DownloadLink
-              href={URL.createObjectURL(
-                new Blob([file.blob], { type: "audio/ogg" }),
-              )}
-              text={file.text}
-              download={file.download}
-            />
-          </li>
-        ))
-      : "";
-
-  const ConvertProcess =
-    uploadFiles.length > 0 ? (
-      <>
-        <ul className="converter__files-list">{FilesListItems}</ul>
-        <div className="converter__wrapper">
-          <ConvertButton onClick={convertingFiles} />
-          <Progress value={convertProgress} />
-        </div>
-        <ul className="converter__links-list">{DownloadLinksList}</ul>
-      </>
-    ) : (
-      ""
-    );
-
-  const convertResult =
-    convertedFiles.length === uploadFiles.length ? (
-      <ZipDownloadLink files={convertedFiles} />
-    ) : (
-      ""
-    );
-
   return loaded ? (
     <div className="converter">
       <FileInput onChange={handleInputChange} />
-      {ConvertProcess}
-      {convertResult}
+      {uploadFiles.length > 0 && (
+        <>
+          <ul className="converter__files-list">
+            {uploadFiles.length > 0 &&
+              uploadFiles.map((file, index) => (
+                <li key={file.name + index}>{file.name}</li>
+              ))}
+          </ul>
+          <div className="converter__wrapper">
+            <ConvertButton onClick={convertingFiles} />
+            <Progress value={convertProgress} />
+          </div>
+          <ul className="converter__links-list">
+            {convertedFiles.length > 0 &&
+              convertedFiles.map((file, index) => (
+                <li key={index + file.text} className="converter__links-item">
+                  <DownloadLink
+                    href={URL.createObjectURL(
+                      new Blob([file.blob], { type: "audio/ogg" }),
+                    )}
+                    text={file.text}
+                    download={file.download}
+                  />
+                </li>
+              ))}
+          </ul>
+        </>
+      )}
+      {convertedFiles.length === uploadFiles.length && (
+        <ZipDownloadLink files={convertedFiles} />
+      )}
     </div>
   ) : (
     <Typography className="converter__preview" variant="subtitle1">
