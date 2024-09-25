@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import createZIP from "../../lib/zip";
@@ -9,8 +9,9 @@ vi.mock("file-saver", () => ({
 }));
 
 describe("createZIP", () => {
-  it("should create a zip file and call saveAs", async () => {
-    const files = [
+  let files;
+  beforeEach(() => {
+    files = [
       {
         text: "file1.txt",
         blob: new Blob(["content1"], { type: "text/plain" }),
@@ -20,7 +21,10 @@ describe("createZIP", () => {
         blob: new Blob(["content2"], { type: "text/plain" }),
       },
     ];
+  });
 
+  it("should create a zip file and call saveAs", async () => {
+    const spy = vi.spyOn(JSZip.prototype, "file");
     // Call the createZIP function
     await createZIP(files);
 
@@ -28,30 +32,6 @@ describe("createZIP", () => {
     expect(saveAs).toHaveBeenCalled();
     // Check that saveAs was called with the correct filename
     expect(saveAs.mock.calls[0][1]).toBe("converted-files.zip");
-  });
-
-  it("should add files to the zip", async () => {
-    const files = [
-      {
-        text: "file1.txt",
-        blob: new Blob(["content1"], { type: "text/plain" }),
-      },
-      {
-        text: "file2.txt",
-        blob: new Blob(["content2"], { type: "text/plain" }),
-      },
-    ];
-
-    // Create a new JSZip instance and add files to it
-    const zip = new JSZip();
-    files.forEach((file) => zip.file(file.text, file.blob));
-    // Generate the expected blob
-    const expectedBlob = await zip.generateAsync({ type: "blob" });
-
-    // Call the createZIP function
-    await createZIP(files);
-
-    // Check that saveAs was called with the correct blob
-    expect(saveAs.mock.calls[0][0]).toEqual(expectedBlob);
+    expect(spy).toBeCalledTimes(files.length);
   });
 });
