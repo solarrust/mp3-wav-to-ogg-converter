@@ -1,11 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
-import { fetchFile } from "@ffmpeg/util";
 import loadWasm from "../lib/loadWasm";
+import transcode from "../lib/transcode";
 import FileInput from "./FileInput";
 import ConvertButton from "./ConvertButton";
 import Progress from "./Progress";
-import DownloadLink from "./DownloadLink";
 import ZipDownloadLink from "./ZipDownloadLink";
 import { Typography } from "@mui/material";
 import UploadFilesList from "./UploadFilesList";
@@ -15,7 +14,6 @@ export default function Converter() {
   const [uploadFiles, setUploadFiles] = useState([]);
   const [convertedFiles, setConvertedFiles] = useState([]);
   const [loaded, setLoaded] = useState(false);
-  // const [isLoading, setIsLoading] = useState(false);
   const [convertProgress, setConvertProgress] = useState(0);
   const ffmpegRef = useRef(new FFmpeg());
 
@@ -39,40 +37,19 @@ export default function Converter() {
     loadFfmpeg();
   }, []);
 
-  const transcode = async (file) => {
-    const start = performance.now();
-
+  const converting = async (file) => {
     const ffmpeg = ffmpegRef.current;
     ffmpeg.on("progress", ({ progress, time }) => {
       setConvertProgress(progress);
     });
-    const fileName = file.name.slice(0, file.name.lastIndexOf("."));
-    let inputFileName = `${fileName}.mp3`;
 
-    if (file.type === "audio/wav") {
-      inputFileName = `${fileName}.wav`;
-    }
-
-    const outputFileName = `${fileName}.ogg`;
-
-    await ffmpeg.writeFile(inputFileName, await fetchFile(file));
-    await ffmpeg.exec(["-i", inputFileName, outputFileName]);
-    const data = await ffmpeg.readFile(outputFileName);
-
-    const link = {
-      blob: new Blob([data.buffer], { type: "audio/ogg" }),
-      text: outputFileName,
-      download: outputFileName,
-    };
+    const link = await transcode(ffmpeg, file);
 
     setConvertedFiles((prev) => [...prev, link]);
-
-    const timeConsumed = performance.now() - start;
-    console.log(`Time for converting ${fileName} file: ${timeConsumed}`);
   };
 
   const convertingFiles = () => {
-    uploadFiles.map((file, index) => transcode(file));
+    uploadFiles.map((file) => converting(file));
   };
 
   return loaded ? (
@@ -97,7 +74,4 @@ export default function Converter() {
       Launching the system 🚀
     </Typography>
   );
-}
-function loadFfmpeg(current) {
-  throw new Error("Function not implemented.");
 }
