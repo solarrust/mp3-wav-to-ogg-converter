@@ -1,19 +1,14 @@
-const { fetchFile } = require('@ffmpeg/util');
+import { fetchFile } from '@ffmpeg/util';
 
 const transcode = async (ffmpeg, file) => {
   const start = performance.now();
 
   const fileName = file.name.slice(0, file.name.lastIndexOf("."));
-  let inputFileName = `${fileName}.mp3`;
-
-  if (file.type === "audio/wav") {
-    inputFileName = `${fileName}.wav`;
-  }
 
   const outputFileName = `${fileName}.ogg`;
 
-  await ffmpeg.writeFile(inputFileName, await fetchFile(file));
-  await ffmpeg.exec(["-i", inputFileName, outputFileName]);
+  await ffmpeg.writeFile(file.name, await fetchFile(file));
+  await ffmpeg.exec(["-i", file.name, outputFileName]);
   const data = await ffmpeg.readFile(outputFileName);
 
   const link = {
