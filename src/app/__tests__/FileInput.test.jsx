@@ -37,6 +37,22 @@ describe("FileInput Component Functionality", () => {
     expect(mockOnChange).not.toHaveBeenCalled();
   });
 
+  it("show the error if ab unsupported file type is selected", () => {
+    const mockOnChange = vi.fn();
+    render(<FileInput onChange={mockOnChange} />);
+    const { getByText } = render(<FileInput onChange={mockOnChange} />);
+
+    const unsupportedFile = new File(["text-content"], "test.txt", {
+      type: "text/plain",
+    });
+
+    const input = document.querySelector('input[type="file"]');
+
+    fireEvent.change(input, { target: { files: [unsupportedFile] } });
+
+    expect(getByText("Invalid file type")).toBeInTheDocument();
+  });
+
   it("supports selecting multiple files", () => {
     const mockOnChange = vi.fn();
     render(<FileInput onChange={mockOnChange} />);
