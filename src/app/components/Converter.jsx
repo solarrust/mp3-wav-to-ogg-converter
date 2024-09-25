@@ -12,9 +12,9 @@ export default function Converter({ ffmpeg }) {
   const [convertedFiles, setConvertedFiles] = useState([]);
   const [convertProgress, setConvertProgress] = useState(0);
 
-  function handleInputChange(event) {
+  function handleInputChange(files) {
     resetStates();
-    setUploadFiles(Array.from(event.target.files));
+    setUploadFiles(files);
   }
 
   function resetStates() {

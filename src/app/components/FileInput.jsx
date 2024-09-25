@@ -20,7 +20,7 @@ export default function FileInput({ onChange }) {
 
       if (isFilesValid) {
         setValid(true);
-        onChange(event);
+        onChange(Array.from(event.target.files));
       }
     }
   };

@@ -1,11 +1,16 @@
 import React from "react";
-import { render, fireEvent, cleanup } from "@testing-library/react";
+import { render, fireEvent, cleanup, screen } from "@testing-library/react";
 import { describe, it, expect, vi, afterEach } from "vitest";
 import FileInput from "../components/FileInput";
 
 afterEach(() => {
   cleanup();
 });
+
+function selectFiles(files) {
+  const input = screen.getByLabelText("Choose files");
+  fireEvent.change(input, { target: { files } });
+}
 
 describe("FileInput Component Functionality", () => {
   it("calls onChange when a file is selected", () => {
@@ -14,49 +19,40 @@ describe("FileInput Component Functionality", () => {
 
     const file = new File(["audio-content"], "test.mp3", { type: "audio/mp3" });
 
-    const input = document.querySelector('input[type="file"]');
-
-    fireEvent.change(input, { target: { files: [file] } });
+    selectFiles([file]);
 
     expect(mockOnChange).toHaveBeenCalledTimes(1);
-    expect(mockOnChange).toHaveBeenCalledWith(expect.anything());
+    expect(mockOnChange).toHaveBeenCalledWith([file]);
   });
 
   it("does not call onChange if an unsupported file type is selected", () => {
     const mockOnChange = vi.fn();
-    render(<FileInput onChange={mockOnChange} />);
-
     const unsupportedFile = new File(["text-content"], "test.txt", {
       type: "text/plain",
     });
 
-    const input = document.querySelector('input[type="file"]');
+    render(<FileInput onChange={mockOnChange} />);
 
-    fireEvent.change(input, { target: { files: [unsupportedFile] } });
+    selectFiles([unsupportedFile]);
 
     expect(mockOnChange).not.toHaveBeenCalled();
   });
 
   it("show the error if ab unsupported file type is selected", () => {
     const mockOnChange = vi.fn();
-    render(<FileInput onChange={mockOnChange} />);
-    const { getByText } = render(<FileInput onChange={mockOnChange} />);
-
     const unsupportedFile = new File(["text-content"], "test.txt", {
       type: "text/plain",
     });
 
-    const input = document.querySelector('input[type="file"]');
+    render(<FileInput onChange={mockOnChange} />);
 
-    fireEvent.change(input, { target: { files: [unsupportedFile] } });
+    selectFiles([unsupportedFile]);
 
-    expect(getByText("Invalid file type")).toBeInTheDocument();
+    expect(screen.getByText("Invalid file type")).toBeInTheDocument();
   });
 
   it("supports selecting multiple files", () => {
     const mockOnChange = vi.fn();
-    render(<FileInput onChange={mockOnChange} />);
-
     const file1 = new File(["audio-content1"], "test1.mp3", {
       type: "audio/mp3",
     });
@@ -64,17 +60,15 @@ describe("FileInput Component Functionality", () => {
       type: "audio/wav",
     });
 
-    const input = document.querySelector('input[type="file"]');
+    render(<FileInput onChange={mockOnChange} />);
 
-    fireEvent.change(input, { target: { files: [file1, file2] } });
+    selectFiles([file1, file2]);
 
-    expect(input.files.length).toBe(2);
+    expect(mockOnChange).toHaveBeenCalledWith([file1, file2]);
   });
 
   it("calls onChange when a file is replaced", () => {
     const mockOnChange = vi.fn();
-    render(<FileInput onChange={mockOnChange} />);
-
     const file1 = new File(["audio-content1"], "test1.mp3", {
       type: "audio/mp3",
     });
@@ -82,9 +76,12 @@ describe("FileInput Component Functionality", () => {
       type: "audio/wav",
     });
 
-    const input = document.querySelector('input[type="file"]');
+    render(<FileInput onChange={mockOnChange} />);
 
-    fireEvent.change(input, { target: { files: [file1] } });
-    fireEvent.change(input, { target: { files: [file2] } });
+    selectFiles([file1]);
+    selectFiles([file2]);
+
+    expect(mockOnChange).toHaveBeenCalledTimes(2);
+    expect(mockOnChange).toHaveBeenCalledWith([file2]);
   });
 });
