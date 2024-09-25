@@ -1,16 +1,7 @@
 import React from "react";
-import { cleanup, render, screen } from "@testing-library/react";
+import { render, screen, cleanup, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import DownloadLinksList from "../components/DownloadLinksList";
-
-vi.mock("../components/DownloadLink", () => ({
-  __esModule: true,
-  default: ({ href, text, download }) => (
-    <a href={href} download={download}>
-      {text}
-    </a>
-  ),
-}));
 
 beforeEach(() => {
   global.URL.createObjectURL = vi.fn();
@@ -26,12 +17,12 @@ describe("DownloadLinksList Component", () => {
   beforeEach(() => {
     files = [
       {
-        blob: new Uint8Array([0x01, 0x02, 0x03]),
+        blob: new Blob([new Uint8Array([0x01, 0x02, 0x03])]),
         text: "File 1",
         download: "file1.ogg",
       },
       {
-        blob: new Uint8Array([0x04, 0x05, 0x06]),
+        blob: new Blob([new Uint8Array([0x04, 0x05, 0x06])]),
         text: "File 2",
         download: "file2.ogg",
       },
@@ -41,37 +32,33 @@ describe("DownloadLinksList Component", () => {
   it("renders a list of download links", () => {
     render(<DownloadLinksList files={files} />);
 
-    // Verify that the correct number of list items are rendered
-    const listItems = screen.getAllByRole("listitem");
-    expect(listItems.length).toBe(2);
-
-    // Verify that the download links are correctly rendered
-    expect(screen.getByText("File 1")).toBeInTheDocument();
-    expect(screen.getByText("File 2")).toBeInTheDocument();
+    // Check that the download links are rendered
+    files.forEach((file) => {
+      const linkElement = screen.getByText(`Download ${file.text}`);
+      expect(linkElement).toBeInTheDocument();
+      expect(linkElement).toHaveAttribute("download", file.download);
+    });
   });
 
-  it("creates correct blob URLs for each file", () => {
-    const createObjectURLMock = vi
-      .spyOn(URL, "createObjectURL")
-      .mockImplementation((blob) => `blob:${blob.size}`);
-
+  it("calls URL.createObjectURL for each file on click", () => {
     render(<DownloadLinksList files={files} />);
 
-    // Ensure that URLs are generated correctly
-    expect(createObjectURLMock).toHaveBeenCalledTimes(2);
+    // Check that URL.createObjectURL is not called initially
+    expect(global.URL.createObjectURL).not.toHaveBeenCalled();
 
-    // Verify that the correct URL is created for each file
-    expect(createObjectURLMock).toHaveBeenCalledWith(expect.any(Blob));
-  });
+    // Simulate clicks on each link
+    files.forEach((file) => {
+      const linkElement = screen.getByText(`Download ${file.text}`);
+      fireEvent.click(linkElement);
+    });
 
-  it("assigns the correct download attributes", () => {
-    render(<DownloadLinksList files={files} />);
-
-    // Verify that the links have the correct download attribute
-    const link1 = screen.getByText("File 1");
-    const link2 = screen.getByText("File 2");
-
-    expect(link1).toHaveAttribute("download", "file1.ogg");
-    expect(link2).toHaveAttribute("download", "file2.ogg");
+    // Check that URL.createObjectURL was called for each file
+    expect(global.URL.createObjectURL).toHaveBeenCalledTimes(files.length);
+    files.forEach((file, index) => {
+      expect(global.URL.createObjectURL).toHaveBeenNthCalledWith(
+        index + 1,
+        file.blob,
+      );
+    });
   });
 });
