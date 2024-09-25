@@ -7,6 +7,8 @@ import Progress from "./Progress";
 import DownloadLink from "./DownloadLink";
 import ZipDownloadLink from "./ZipDownloadLink";
 import { Typography } from "@mui/material";
+import UploadFilesList from "./UploadFilesList";
+import DownloadLinksList from "./DownloadLinksList";
 
 export default function Converter() {
   const [uploadFiles, setUploadFiles] = useState([]);
@@ -83,30 +85,12 @@ export default function Converter() {
       <FileInput onChange={handleInputChange} />
       {uploadFiles.length > 0 && (
         <>
-          <ul className="converter__files-list">
-            {uploadFiles.length > 0 &&
-              uploadFiles.map((file, index) => (
-                <li key={file.name + index}>{file.name}</li>
-              ))}
-          </ul>
+          <UploadFilesList files={uploadFiles} />
           <div className="converter__wrapper">
             <ConvertButton onClick={convertingFiles} />
             <Progress value={convertProgress} />
           </div>
-          <ul className="converter__links-list">
-            {convertedFiles.length > 0 &&
-              convertedFiles.map((file, index) => (
-                <li key={index + file.text} className="converter__links-item">
-                  <DownloadLink
-                    href={URL.createObjectURL(
-                      new Blob([file.blob], { type: "audio/ogg" }),
-                    )}
-                    text={file.text}
-                    download={file.download}
-                  />
-                </li>
-              ))}
-          </ul>
+          <DownloadLinksList files={convertedFiles}/>
         </>
       )}
       {convertedFiles.length === uploadFiles.length && (
