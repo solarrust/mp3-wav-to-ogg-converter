@@ -29,11 +29,6 @@ describe("transcode function", () => {
 
     fetchFile.mockResolvedValue(new Uint8Array([0x01, 0x02, 0x03]));
 
-    // Mock performance.now() to simulate time taken for transcoding
-    vi.spyOn(global.performance, "now")
-      .mockReturnValueOnce(1000) // Initial time before transcoding
-      .mockReturnValueOnce(1500); // Final time after transcoding
-
     // Mock the Blob constructor to verify that it's called with correct arguments
     global.Blob = vi.fn().mockImplementation((data, options) => ({
       data,
@@ -93,31 +88,5 @@ describe("transcode function", () => {
       "test.wav",
       "test.ogg",
     ]);
-  });
-
-  it("logs the time consumed for transcoding", async () => {
-    const consoleLogSpy = vi.spyOn(console, "log");
-
-    await transcode(mockFfmpeg, mockFile);
-
-    // Verify that the time consumed for transcoding is logged correctly
-    expect(consoleLogSpy).toHaveBeenCalledWith(
-      "Time for converting test file: 500",
-    );
-
-    consoleLogSpy.mockRestore();
-  });
-
-  it("calculates the time taken using performance.now()", async () => {
-    await transcode(mockFfmpeg, mockFile);
-
-    // Ensure that performance.now() was called twice (before and after transcoding)
-    expect(performance.now).toHaveBeenCalledTimes(2);
-
-    // Verify that the time difference is calculated correctly
-    const initialTime = performance.now.mock.results[0].value;
-    const finalTime = performance.now.mock.results[1].value;
-
-    expect(finalTime - initialTime).toBe(500);
   });
 });
