@@ -3,7 +3,7 @@ import { render, fireEvent, cleanup } from "@testing-library/react";
 import { describe, it, expect, vi, afterEach } from "vitest";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
-import ZipDownloadLink from "../components/ZipDownloadLink";
+import ZipDownloadLink from "../components/ZipDownloadButton";
 
 afterEach(() => {
   cleanup();
@@ -54,6 +54,9 @@ describe("ZipDownloadLink Component", () => {
 
     await zipInstance.generateAsync();
     expect(zipInstance.generateAsync).toHaveBeenCalledWith({ type: "blob" });
-    expect(saveAs).toHaveBeenCalledWith(expect.any(Blob), "converted-files.zip");
+    expect(saveAs).toHaveBeenCalledWith(
+      expect.any(Blob),
+      "converted-files.zip",
+    );
   });
 });
