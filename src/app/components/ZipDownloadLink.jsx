@@ -1,18 +1,10 @@
 import React from "react";
 import Button from "@mui/material/Button";
-
-import JSZip from "jszip";
-import { saveAs } from "file-saver";
+import createZIP from "../lib/zip";
 
 export default function ZipDownloadLink({ files }) {
   function onClick() {
-    const zip = new JSZip();
-
-    files.map((file) => zip.file(file.text, file.blob));
-
-    zip
-      .generateAsync({ type: "blob" })
-      .then((blob) => saveAs(blob, "converted-files.zip"));
+    createZIP(files);
   }
 
   return files.length > 0 ? (
