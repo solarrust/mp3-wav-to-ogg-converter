@@ -3,7 +3,7 @@ import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import createZIP from "../../lib/zip";
 
-// Мокаем saveAs функцию
+// Mock the saveAs function
 vi.mock("file-saver", () => ({
   saveAs: vi.fn(),
 }));
@@ -21,11 +21,12 @@ describe("createZIP", () => {
       },
     ];
 
+    // Call the createZIP function
     await createZIP(files);
 
-    // Проверяем, что saveAs был вызван
+    // Check that saveAs was called
     expect(saveAs).toHaveBeenCalled();
-    // Проверяем, что saveAs был вызван с blob и именем файла
+    // Check that saveAs was called with the correct filename
     expect(saveAs.mock.calls[0][1]).toBe("converted-files.zip");
   });
 
@@ -41,13 +42,16 @@ describe("createZIP", () => {
       },
     ];
 
+    // Create a new JSZip instance and add files to it
     const zip = new JSZip();
     files.forEach((file) => zip.file(file.text, file.blob));
+    // Generate the expected blob
     const expectedBlob = await zip.generateAsync({ type: "blob" });
 
+    // Call the createZIP function
     await createZIP(files);
 
-    // Проверяем, что saveAs был вызван с правильным blob
+    // Check that saveAs was called with the correct blob
     expect(saveAs.mock.calls[0][0]).toEqual(expectedBlob);
   });
 });
