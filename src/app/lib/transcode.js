@@ -10,11 +10,13 @@ const transcode = async (ffmpeg, file) => {
   await ffmpeg.writeFile(file.name, await fetchFile(file));
   await ffmpeg.exec(["-i", file.name, outputFileName]);
   const data = await ffmpeg.readFile(outputFileName);
+  const blob = new Blob([data.buffer], { type: "audio/ogg" });
 
   const link = {
-    blob: new Blob([data.buffer], { type: "audio/ogg" }),
+    blob: blob,
     text: outputFileName,
     download: outputFileName,
+    href: URL.createObjectURL(blob)
   };
 
   const timeConsumed = performance.now() - start;

@@ -6,6 +6,10 @@ vi.mock("@ffmpeg/util", () => ({
   fetchFile: vi.fn(),
 }));
 
+beforeEach(() => {
+  global.URL.createObjectURL = vi.fn();
+});
+
 describe("transcode function", () => {
   let mockFfmpeg;
   let mockFile;
