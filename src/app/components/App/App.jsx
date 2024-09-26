@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import loadWasm from "../lib/loadWasm";
+import loadWasm from "../../lib/loadWasm";
 import { Typography } from "@mui/material";
-import Converter from "./Converter";
+import Converter from "../Converter/Converter";
 
 // TODO: написать тесты на компонент
 // TODO: показывать ошибки в интерфейсе (во всех компонентах). Где есть промисы и асинк/авейт — обрабатывать обязательно

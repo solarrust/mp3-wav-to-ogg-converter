@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import Typography from "@mui/material/Typography";
 
+// TODO: Написать общую функцию валидации всего списка файлов
 const validation = (fileName) => {
   return /\.(?:wav|mp3)$/i.exec(fileName);
 };
@@ -25,6 +26,7 @@ export default function FileInput({ onChange }) {
     }
   };
 
+  // TODO: Унести в CSS
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
     clipPath: "inset(50%)",
@@ -36,6 +38,7 @@ export default function FileInput({ onChange }) {
     whiteSpace: "nowrap",
     width: 1,
   });
+
   return (
     <div className="converter__wrapper">
       <Button

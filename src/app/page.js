@@ -1,7 +1,7 @@
 "use client"
 
-import NoSSRWrapper from "./components/NoSSRWrapper";
-import App from './components/App';
+import NoSSRWrapper from "./components/NoSSRWrapper/NoSSRWrapper";
+import App from './components/App/App';
 import React from 'react';
 import { Typography } from '@mui/material';
 

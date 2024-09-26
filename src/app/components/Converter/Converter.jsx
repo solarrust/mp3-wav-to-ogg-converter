@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import transcode from "../lib/transcode";
-import FileInput from "./FileInput";
-import ConvertButton from "./ConvertButton";
-import Progress from "./Progress";
-import ZipDownloadButton from "./ZipDownloadButton";
-import UploadFilesList from "./UploadFilesList";
-import DownloadLinksList from "./DownloadLinksList";
+import transcode from "../../lib/transcode";
+import FileInput from "../FileInput/FileInput";
+import ConvertButton from "../ConvertButton/ConvertButton";
+import Progress from "../Progress/Progress";
+import ZipDownloadButton from "../ZipDownloadButton/ZipDownloadButton";
+import UploadFilesList from "../UploadFilesList/UploadFilesList";
+import DownloadLinksList from "../DownloadLinksList/DownloadLinksList";
 
 // TODO: Написать тесты на рисование полоски прогресса для разного количества файлов
 export default function Converter({ ffmpeg }) {
@@ -13,6 +13,7 @@ export default function Converter({ ffmpeg }) {
   const [convertedFiles, setConvertedFiles] = useState([]);
   const [convertProgress, setConvertProgress] = useState(0);
 
+  // TODO: вынести в функцию с параметрами (длина загруженных, длина конвертированных, прогресс)ю Возращать 1 если длины равны
   const fileRatio = uploadFiles.length > 0 ? 1 / uploadFiles.length : 0;
   const progress = fileRatio * (convertedFiles.length + convertProgress);
 
@@ -33,32 +34,30 @@ export default function Converter({ ffmpeg }) {
     });
   }, []);
 
-  const converting = async (file) => {
+  const convert = async (file) => {
     const link = await transcode(ffmpeg, file);
 
     setConvertedFiles((prev) => [...prev, link]);
     setConvertProgress(0);
   };
 
-  const convertingFiles = async () => {
+  const convertFiles = async () => {
     for (const file of uploadFiles) {
-      await converting(file);
+      await convert(file);
     }
   };
 
   return (
     <div className="converter">
       <FileInput onChange={handleInputChange} />
+      <UploadFilesList files={uploadFiles} />
       {uploadFiles.length > 0 && (
-        <>
-          <UploadFilesList files={uploadFiles} />
-          <div className="converter__wrapper">
-            <ConvertButton onClick={convertingFiles} />
-            <Progress value={progress} />
-          </div>
-          <DownloadLinksList files={convertedFiles} />
-        </>
+        <div className="converter__wrapper">
+          <ConvertButton onClick={convertFiles} />
+          <Progress value={progress} />
+        </div>
       )}
+      <DownloadLinksList files={convertedFiles} />
       {convertedFiles.length === uploadFiles.length && (
         <ZipDownloadButton files={convertedFiles} />
       )}

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
-import createZIP from "../../lib/zip";
+import createZIP from "./zip";
 
 // Mock the saveAs function
 vi.mock("file-saver", () => ({
@@ -35,3 +35,5 @@ describe("createZIP", () => {
     expect(spy).toBeCalledTimes(files.length);
   });
 });
+
+// TODO: Проверить плохой сценарий

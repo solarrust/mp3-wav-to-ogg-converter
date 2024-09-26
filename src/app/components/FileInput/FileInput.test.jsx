@@ -1,7 +1,7 @@
 import React from "react";
 import { render, fireEvent, cleanup, screen } from "@testing-library/react";
 import { describe, it, expect, vi, afterEach } from "vitest";
-import FileInput from "../components/FileInput";
+import FileInput from "./FileInput";
 
 afterEach(() => {
   cleanup();

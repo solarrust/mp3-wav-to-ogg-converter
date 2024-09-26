@@ -7,7 +7,7 @@ import {
   cleanup,
 } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import Converter from "../components/Converter";
+import Converter from "./Converter";
 
 beforeEach(() => {
   global.URL.createObjectURL = vi.fn();

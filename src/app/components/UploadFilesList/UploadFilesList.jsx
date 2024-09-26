@@ -1,6 +1,7 @@
 import React from "react";
 
-export default function UploadFilesList({files}) {
+export default function UploadFilesList({ files }) {
+  if (!files.length) return null;
   return (
     <ul className="converter__files-list">
       {files.map((file, index) => (

@@ -1,7 +1,7 @@
 import React from "react";
 import { cleanup, render } from "@testing-library/react";
 import { describe, it, expect, afterEach } from "vitest";
-import Progress from "../components/Progress";
+import Progress from "./Progress";
 
 afterEach(() => {
   cleanup();

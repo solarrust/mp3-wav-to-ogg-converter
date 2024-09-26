@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, beforeEach } from "vitest";
-import DownloadLinksList from "../components/DownloadLinksList";
+import DownloadLinksList from "./DownloadLinksList";
 
 describe("DownloadLinksList Component", () => {
   let files;

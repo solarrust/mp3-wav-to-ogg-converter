@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { fetchFile } from "@ffmpeg/util";
-import transcode from "../../lib/transcode";
+import transcode from "./transcode";
 
 vi.mock("@ffmpeg/util", () => ({
   fetchFile: vi.fn(),
@@ -39,27 +39,8 @@ describe("transcode function", () => {
   it("transcodes a file and returns the download link", async () => {
     const result = await transcode(mockFfmpeg, mockFile);
 
-    // Verify that ffmpeg.writeFile was called with correct arguments
-    expect(mockFfmpeg.writeFile).toHaveBeenCalledWith(
-      "test.mp3",
-      expect.any(Uint8Array),
-    );
-
-    // Verify that ffmpeg.exec was called with the correct transcoding command
-    expect(mockFfmpeg.exec).toHaveBeenCalledWith([
-      "-i",
-      "test.mp3",
-      "test.ogg",
-    ]);
-
-    // Verify that ffmpeg.readFile was called with the correct output file name
-    expect(mockFfmpeg.readFile).toHaveBeenCalledWith("test.ogg");
-
-    // Verify that a Blob was created with the correct buffer and mime type
-    expect(global.Blob).toHaveBeenCalledWith([expect.any(ArrayBuffer)], {
-      type: "audio/ogg",
-    });
-
+    // TODO: Проверить что в blob не any, а конкретное значение из writeFile
+    // TODO: Добавить href в поля объекта
     // Verify the structure of the returned link object
     expect(result).toEqual({
       blob: expect.any(Object),

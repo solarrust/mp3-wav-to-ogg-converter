@@ -3,7 +3,7 @@ import { render, fireEvent, cleanup } from "@testing-library/react";
 import { describe, it, expect, vi, afterEach } from "vitest";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
-import ZipDownloadLink from "../components/ZipDownloadButton";
+import ZipDownloadLink from "./ZipDownloadButton";
 
 afterEach(() => {
   cleanup();
