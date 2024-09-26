@@ -1,5 +1,5 @@
 import "./globals.css";
-import React from 'react';
+import React from "react";
 
 export const metadata = {
   title: "Audio converter",
@@ -9,9 +9,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
-        {children}
-      </body>
-    </html >
+      <body>{children}</body>
+    </html>
   );
 }

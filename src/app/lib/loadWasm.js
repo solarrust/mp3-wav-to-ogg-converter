@@ -2,12 +2,12 @@ import { FFmpeg } from "@ffmpeg/ffmpeg";
 
 export default async function loadWasm() {
   const start = performance.now();
-  const ffmpeg = new FFmpeg()
+  const ffmpeg = new FFmpeg();
 
   try {
     await ffmpeg.load();
   } catch (error) {
-    throw error
+    throw error;
   }
 
   const timeConsumed = performance.now() - start;

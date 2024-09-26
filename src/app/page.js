@@ -1,14 +1,13 @@
-"use client"
+"use client";
 
 import NoSSRWrapper from "./components/NoSSRWrapper/NoSSRWrapper";
-import App from './components/App/App';
-import React from 'react';
-import { Typography } from '@mui/material';
+import App from "./components/App/App";
+import React from "react";
 
 export default function Home() {
   return (
     <NoSSRWrapper>
-      <Typography variant="h1">Audio Converter</Typography>
+      <h1 className="title">Audio Converter</h1>
       <App />
     </NoSSRWrapper>
   );

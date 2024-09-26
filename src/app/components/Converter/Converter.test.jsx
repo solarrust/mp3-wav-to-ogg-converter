@@ -101,4 +101,21 @@ describe("Converter Component", () => {
       expect(screen.getByText("Download ZIP")).toBeInTheDocument();
     });
   });
+
+  it("displays an error message if convert(file) fails", async () => {
+    const errorMessage = "Conversion failed";
+    mockFFmpeg.exec.mockRejectedValueOnce(new Error(errorMessage));
+
+    render(<Converter ffmpeg={mockFFmpeg} />);
+
+    const fileInput = screen.getByLabelText(label);
+    fireEvent.change(fileInput, { target: { files: [file] } });
+
+    const convertButton = screen.getByText("Convert into OGG");
+    fireEvent.click(convertButton);
+
+    await waitFor(() => {
+      expect(screen.getByText(errorMessage)).toBeInTheDocument();
+    });
+  });
 });

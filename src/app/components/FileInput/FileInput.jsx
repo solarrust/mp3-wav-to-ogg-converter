@@ -1,44 +1,32 @@
 import React, { useState } from "react";
-import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import Typography from "@mui/material/Typography";
 import Wrapper from "../Wrapper/Wrapper";
 
-// TODO: Написать общую функцию валидации всего списка файлов
-const validation = (fileName) => {
+function validation(fileName) {
   return /\.(?:wav|mp3)$/i.exec(fileName);
-};
+}
+
+function validAllFiles(files) {
+  if (!files || !files.length) return null;
+
+  return Array.from(files).every((file) => validation(file.name));
+}
 
 export default function FileInput({ onChange }) {
   const [valid, setValid] = useState(true);
 
-  const handleFileChange = (event) => {
+  function handleFileChange(event) {
     setValid(false);
-    if (event.target.files && event.target.files.length > 0) {
-      const isFilesValid = Array.from(event.target.files).every((file) =>
-        validation(file.name),
-      );
+    const isFilesValid = validAllFiles(event.target.files);
 
-      if (isFilesValid) {
-        setValid(true);
-        onChange(Array.from(event.target.files));
-      }
+    if (isFilesValid) {
+      onChange(Array.from(event.target.files));
     }
-  };
 
-  // TODO: Унести в CSS
-  const VisuallyHiddenInput = styled("input")({
-    clip: "rect(0 0 0 0)",
-    clipPath: "inset(50%)",
-    height: 1,
-    overflow: "hidden",
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    whiteSpace: "nowrap",
-    width: 1,
-  });
+    setValid(isFilesValid);
+  }
 
   return (
     <Wrapper>
@@ -50,7 +38,8 @@ export default function FileInput({ onChange }) {
         startIcon={<CloudUploadIcon />}
       >
         Choose files
-        <VisuallyHiddenInput
+        <input
+          className="sr-only"
           type="file"
           onChange={handleFileChange}
           multiple
@@ -61,7 +50,7 @@ export default function FileInput({ onChange }) {
       <Typography variant="caption">
         Only <strong>MP3</strong> and <strong>WAV</strong> files are allowed
       </Typography>
-      {!valid && <span className="converter__error">Invalid file type</span>}
+      {!valid && <p className="error">Invalid file type</p>}
     </Wrapper>
   );
 }

@@ -13,6 +13,7 @@ export default function Converter({ ffmpeg }) {
   const [uploadFiles, setUploadFiles] = useState([]);
   const [convertedFiles, setConvertedFiles] = useState([]);
   const [convertProgress, setConvertProgress] = useState(0);
+  const [error, setError] = useState(null);
 
   // TODO: вынести в функцию с параметрами (длина загруженных, длина конвертированных, прогресс)ю Возращать 1 если длины равны
   const fileRatio = uploadFiles.length > 0 ? 1 / uploadFiles.length : 0;
@@ -24,6 +25,7 @@ export default function Converter({ ffmpeg }) {
   }
 
   function resetStates() {
+    setError(null);
     setUploadFiles([]);
     setConvertedFiles([]);
     setConvertProgress(0);
@@ -35,18 +37,22 @@ export default function Converter({ ffmpeg }) {
     });
   }, []);
 
-  const convert = async (file) => {
+  async function convert(file) {
     const link = await transcode(ffmpeg, file);
 
     setConvertedFiles((prev) => [...prev, link]);
     setConvertProgress(0);
-  };
+  }
 
-  const convertFiles = async () => {
-    for (const file of uploadFiles) {
-      await convert(file);
+  async function convertFiles() {
+    try {
+      for (const file of uploadFiles) {
+        await convert(file);
+      }
+    } catch (er) {
+      setError(er);
     }
-  };
+  }
 
   return (
     <div className="converter">
@@ -55,6 +61,7 @@ export default function Converter({ ffmpeg }) {
       {uploadFiles.length > 0 && (
         <Wrapper>
           <ConvertButton onClick={convertFiles} />
+          {error && <p className="error">{error.message}</p>}
           <Progress value={progress} />
         </Wrapper>
       )}

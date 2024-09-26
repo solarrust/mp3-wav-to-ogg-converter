@@ -3,9 +3,11 @@ import React from "react";
 export default function UploadFilesList({ files }) {
   if (!files.length) return null;
   return (
-    <ul className="converter__files-list">
+    <ul className="files-list">
       {files.map((file, index) => (
-        <li key={file.name + index}>{file.name}</li>
+        <li key={file.name + index} className="files-list__item">
+          {file.name}
+        </li>
       ))}
     </ul>
   );

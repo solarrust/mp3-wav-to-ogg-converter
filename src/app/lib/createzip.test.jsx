@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
-import createZIP from "./zip";
+import createZIP from "./createzip";
 
 // Mock the saveAs function
 vi.mock("file-saver", () => ({

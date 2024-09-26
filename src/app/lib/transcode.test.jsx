@@ -70,4 +70,16 @@ describe("transcode function", () => {
       "test.ogg",
     ]);
   });
+
+  it("throws an error if ffmpeg.exec fails", async () => {
+    const errorMessage = "Transcoding failed";
+    const wavFile = new File(["dummy content"], "test.wav", {
+      type: "audio/wav",
+    });
+
+    // Mock ffmpeg.exec to throw an error
+    mockFfmpeg.exec.mockRejectedValueOnce(new Error(errorMessage));
+
+    await expect(transcode(mockFfmpeg, wavFile)).rejects.toThrow(errorMessage);
+  });
 });
