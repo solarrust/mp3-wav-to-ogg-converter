@@ -3,6 +3,7 @@ import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import Typography from "@mui/material/Typography";
+import Wrapper from "../Wrapper/Wrapper";
 
 // TODO: Написать общую функцию валидации всего списка файлов
 const validation = (fileName) => {
@@ -40,7 +41,7 @@ export default function FileInput({ onChange }) {
   });
 
   return (
-    <div className="converter__wrapper">
+    <Wrapper>
       <Button
         component="label"
         role={undefined}
@@ -61,6 +62,6 @@ export default function FileInput({ onChange }) {
         Only <strong>MP3</strong> and <strong>WAV</strong> files are allowed
       </Typography>
       {!valid && <span className="converter__error">Invalid file type</span>}
-    </div>
+    </Wrapper>
   );
 }

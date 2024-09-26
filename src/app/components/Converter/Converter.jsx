@@ -6,6 +6,7 @@ import Progress from "../Progress/Progress";
 import ZipDownloadButton from "../ZipDownloadButton/ZipDownloadButton";
 import UploadFilesList from "../UploadFilesList/UploadFilesList";
 import DownloadLinksList from "../DownloadLinksList/DownloadLinksList";
+import Wrapper from "../Wrapper/Wrapper";
 
 // TODO: Написать тесты на рисование полоски прогресса для разного количества файлов
 export default function Converter({ ffmpeg }) {
@@ -52,10 +53,10 @@ export default function Converter({ ffmpeg }) {
       <FileInput onChange={handleInputChange} />
       <UploadFilesList files={uploadFiles} />
       {uploadFiles.length > 0 && (
-        <div className="converter__wrapper">
+        <Wrapper>
           <ConvertButton onClick={convertFiles} />
           <Progress value={progress} />
-        </div>
+        </Wrapper>
       )}
       <DownloadLinksList files={convertedFiles} />
       {convertedFiles.length === uploadFiles.length && (
