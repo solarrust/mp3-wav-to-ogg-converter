@@ -4,12 +4,11 @@ import createZIP from "../../lib/createzip";
 import Wrapper from "../Wrapper/Wrapper";
 
 export default function ZipDownloadButton({ files }) {
+  const [error, setError] = useState(null);
   if (!files.length) return null;
 
-  const [error, setError] = useState(null);
 
   async function onClick() {
-    setError(null);
     try {
       await createZIP(files);
     } catch (error) {

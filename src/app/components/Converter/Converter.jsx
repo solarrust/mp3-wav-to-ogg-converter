@@ -35,7 +35,7 @@ export default function Converter({ ffmpeg }) {
     ffmpeg.on("progress", ({ progress }) => {
       setConvertProgress(progress);
     });
-  }, []);
+  }, [ffmpeg]);
 
   async function convert(file) {
     const link = await transcode(ffmpeg, file);
