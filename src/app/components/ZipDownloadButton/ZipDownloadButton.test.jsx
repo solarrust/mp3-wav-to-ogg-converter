@@ -34,4 +34,19 @@ describe("ZipDownloadLink Component", () => {
       expect(createZIP).toHaveBeenCalledWith(files);
     });
   });
+
+  it("shows error if createZIP fails", async () => {
+    const files = [{ text: "file1.txt", blob: new Blob(["content"]) }];
+    const error = new Error("Failed to create ZIP");
+    createZIP.mockRejectedValueOnce(error);
+
+    render(<ZipDownloadButton files={files} />);
+
+    const button = screen.getByText("Download ZIP");
+    fireEvent.click(button);
+
+    await waitFor(() => {
+      expect(screen.getByText(error.message)).toBeInTheDocument();
+    });
+  });
 });
