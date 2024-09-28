@@ -1,10 +1,28 @@
+# MP3/WAV to OGG Converter
+
 [![Lint & test](https://github.com/solarrust/mp3-wav-to-ogg-converter/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/solarrust/mp3-wav-to-ogg-converter/actions/workflows/main.yml)
+
+[https://solarrust.github.io/mp3-wav-to-ogg-converter/](https://solarrust.github.io/mp3-wav-to-ogg-converter/)
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Installation
+
+To install the dependencies, run:
+
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+# or
+bun install
+```
+
 ## Getting Started
 
-First, run the development server:
+Run the development server:
 
 ```bash
 npm run dev
@@ -18,21 +36,37 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+You can start editing the page by modifying _app/page.js_. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Features
+
+- Convert MP3 and WAV files to OGG format.
+- Simple and intuitive user interface.
+- Real-time progress updates.
+- Error handling and user notifications.
+
+## Usage
+
+1. Upload your MP3 or WAV files.
+1. Click the "Convert" button.
+1. Download the converted OGG files.
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+To learn more about the technologies used in this project, take a look at the following resources:
 
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [React Documentation](https://reactjs.org/docs/getting-started.html) - learn about React, a JavaScript library for building user interfaces.
+- [ffmpeg.wasm](https://ffmpegwasm.netlify.app/) — documentation for FFmpeg.wasm.
+- [Vitest Documentation](https://vitest.dev) - a Vite-native unit test framework.
+- [Material-UI Documentation](https://mui.com) - React components for faster and easier web development.
+- [ESLint Documentation](https://eslint.org/docs/user-guide/getting-started) - learn about ESLint, a tool for identifying and reporting on patterns found in ECMAScript/JavaScript code.
+- [Prettier Documentation](https://prettier.io/docs/en/index.html) - learn about Prettier, an opinionated code formatter.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Contributing
 
-## Deploy on Vercel
+Contributions are welcome! Please open an issue or submit a pull request for any changes.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## License
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is licensed under the MIT License. See the LICENSE file for details.

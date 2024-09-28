@@ -7,7 +7,6 @@ export default function ZipDownloadButton({ files }) {
   const [error, setError] = useState(null);
   if (!files.length) return null;
 
-
   async function onClick() {
     try {
       await createZIP(files);
